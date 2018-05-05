@@ -1,0 +1,196 @@
+# Your snippets
+#
+# Atom snippets allow you to enter a simple prefix in the editor and hit tab to
+# expand the prefix into a larger code block with templated values.
+#
+# You can create a new snippet in this file by typing "snip" and then hitting
+# tab.
+#
+# An example CoffeeScript snippet to expand log to console.log:
+#
+# '.source.coffee':
+#   'Console log':
+#     'prefix': 'log'
+#     'body': 'console.log $1'
+#
+# Each scope (e.g. '.source.coffee' above) can only be declared once.
+#
+# This file uses CoffeeScript Object Notation (CSON).
+# If you are unfamiliar with CSON, you can read more about it in the
+# Atom Flight Manual:
+# http://flight-manual.atom.io/using-atom/sections/basic-customization/#_cson
+'.text.html.php':
+    'Slide Dinamico':
+      'prefix': 'lock-slide'
+      'body':  """
+        <?php
+              foreach($lsSlide as $s){
+                  if($s["link"] != ""){
+                      if($slide -> videoType($s["linkVideo"]) == "unknown"){
+          ?>
+            <div class="ms-slide" data-delay="4">
+              <img src="<?=PATH?>js/masterslider/style/blank.gif" data-src="<?=PATH?>img/slide/<?=$s["imgPortada"]?>" alt="<?=SITENAME?>"/>
+              <a href="<?=$s["link"]?>">Link</a>
+            </div>
+          <?php
+                      }else{
+          ?>
+            <div class="ms-slide" data-delay="4">
+          <img src="<?=PATH?>js/masterslider/style/blank.gif" data-src="<?=PATH?>img/slide/<?=$s["imgPortada"]?>" alt="<?=SITENAME?>"/>
+          <a href="<?=$s["linkVideo"]?>" data-type="video">Youtube video</a>
+        </div>
+          <?php
+                      }
+                  }else if($slide -> videoType($s["linkVideo"]) != "unknown"){
+           ?>
+           <div class="ms-slide" data-delay="4">
+         <img src="<?=PATH?>js/masterslider/style/blank.gif" data-src="<?=PATH?>img/slide/<?=$s["imgPortada"]?>" alt="<?=SITENAME?>"/>
+         <a href="<?=$s["linkVideo"]?>" data-type="video">Youtube video</a>
+       </div>
+           <?php
+         } else{ ?>
+           <div class="ms-slide" data-delay="4">
+         <img src="<?=PATH?>js/masterslider/style/blank.gif" data-src="<?=PATH?>img/slide/<?=$s["imgPortada"]?>" alt="<?=SITENAME?>"/>
+       </div>
+         <?php }
+               }
+           ?>
+           """
+    'Blog Inicio':
+      'prefix': 'lock-blogIn'
+      'body':  """
+        <?   foreach($lsBlog as $s){
+          $categoria -> obtCategoria($s['idCategoria']);
+         ?>
+         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" data-sr="wait .3s over 1s">
+           <div class="bg" style="background-image: url(<?=PATH?>img/blog/<?=$s['portada']?>);">
+             <img src="img/base.jpg" alt="<?=SITENAME?>">
+           </div>
+             <h2><?=$s['titulo']?></h2>
+             <h3><?=$categoria -> tituloES?>  - <?=$s['fechaCreacion']?></h3>
+             <p>
+               <?=$s['descripcion']?>
+             </p>
+             <a href="<?=PATH?>blog/<?=$s['idBlog']?>-<?=$s['urlAmigable']?>"><span></span></a>
+         </div>
+         <?}?>
+           """
+    'Blog Categorias':
+      'prefix': 'lock-blogCategorias'
+      'body':  """
+        <ul>
+                  <li><a class="categoria <?=($idCat==0) ? 'active' : ''?>" href="">Todos</a></li>
+                  <?php
+        					if(count($lsCat)>0){
+        						foreach ($lsCat as $cat) {
+        							if($categorias->exist_categoriaxblog($cat['idCategoria'])){
+        					?>
+        					<li><a class="categoria <?=($idCat==$cat['idCategoria']) ? 'active' : ''?>"  data-id="<?=$cat['idCategoria']?>" href="javascript:;"><?=$cat['tituloES']?></a></li>
+        					<?php
+        							}
+        						}
+        					}
+        					?>
+                </ul>
+           """
+    'Blog Contenido Detalle':
+      'prefix': 'lock-blogContenido'
+      'body':  """
+        <?php
+                        if(count($blog->contenido['es'])>0){
+                            foreach ($blog->contenido['es'] as $bcont) {
+                                if($bcont['tipo']==1){
+                        ?>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 texto-noticia animated fadeInUp">
+                          <?=$bcont['descripcion']?>
+                        </div>
+                        <?php
+                                }else if($bcont['tipo']==2){
+                        ?>
+                        <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 npad galeriaPad">
+                            <img class="img-responsive" src="<?=PATH?>img/blog/contenido/<?=$bcont['imagen']?>" alt="">
+                        </div>
+                        <?php
+                                }else if($bcont['tipo']==3){
+                        ?>
+                        <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 npad video videoPad">
+                            <div class="master-slider ms-skin-default slider-video" id="Onlyvideo-">
+                                <div class="ms-slide">
+                                    <img src="<?=PATH?>js/masterslider/style/blank.gif" data-src="<?=PATH?>img/blog/contenido/<?=$bcont['imagen']?>" alt="<?=SITENAME?>"/>
+                                    <a href="<?=$bcont['iframe']?>" data-type="video"><?=SITENAME?></a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                                }else if($bcont['tipo']==4){
+                                    $galeria = new blog_galeria('',$bcont['idContenido']);
+                                    $listGal = $galeria -> listaGaleriaBlog();
+                                    if(count($listGal)>0){
+                        ?>
+                        <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 npad galeriaPad">
+                            <div class="master-slider ms-skin-default slider-img" id="Gallery-9">
+                                <?php
+                                    foreach ($listGal as $g) {
+                                ?>
+                                <div class="ms-slide">
+                                    <img src="<?=PATH?>js/masterslider/style/blank.gif" data-src="<?=PATH?>img/blog/galeria/<?=$g['ruta']?>" alt="<?=SITENAME?>"/>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                        <?php
+                                    }
+                                }
+                            }
+                        }
+                        ?>
+           """
+    'Blog Noticias Recientes':
+      'prefix': 'lock-blogNoticiasRecientes'
+      'body':  """
+          <?php
+                      if(count($lsRB)>0){
+                          foreach ($lsRB as $rb) {
+                            $cat2= new categoria($rb['idCategoria']);
+                            $cat2 -> getCategoria();
+                      ?>
+                      <div class="blogrec">
+                          <div class="img" style="background-image:url(<?=PATH?>img/blog/<?=$rb['portada']?>)" onclick="openUrl('<?=PATH?>blog/<?=$rb['idBlog']?>-<?=$rb['urlAmigable']?>')">
+                              <img src="img/base.jpg" alt="<?=SITENAME?>">
+                          </div>
+                          <h5><?=$rb['titulo']?></h5>
+                          <h6><?=$cat2 ->tituloES?> - <?=$rb['fechaCreacion']?></h6>
+                          <a href="<?=PATH?>blog/<?=$rb['idBlog']?>-<?=$rb['urlAmigable']?>"><span></span></a>
+                      </div>
+
+                      <?php
+                          }
+                      }
+                      ?>
+           """
+    'Métodos Blog Detalle':
+      'prefix': 'lock-metodosBlogDetalle'
+      'body':  """
+          (isset($_REQUEST['idBlog']) AND $_REQUEST['idBlog']!=0) ? $id=$_REQUEST['idBlog'] : $id='';
+            $blog = new blog($id);
+            $blog -> listarContenido('es');
+
+            $lsRB = $blog -> listaBlogRecientes('es',3, $id);
+            $blog -> obtenerBlog();
+            $blog -> obtenerDatosBlog('ES');
+            $cat = new categoria($blog->idCategoria);
+            $cat -> getCategoria();
+
+            $categorias = new categoria();
+            $lsCat = $categorias -> listCategoria(1,false,1,1);
+           """
+    'Autoload':
+      'prefix': 'lock-autload'
+      'body':  """
+        function __autoload($nombre_clase){
+          include 'panel/clases/'.$nombre_clase .'.php';
+        }
+           """
